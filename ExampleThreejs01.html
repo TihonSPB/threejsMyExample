@@ -24,7 +24,7 @@
             camera.position.z = 5; // Позиция камеры по оси Z.
 
             // --3-- Создаем рендерер
-            const renderer = new THREE.WebGLRenderer(); // Рендерер, который будет отображать сцену
+            const renderer = new THREE.WebGLRenderer({ antialias: true }); // Рендерер, который будет отображать сцену
             renderer.setSize(window.innerWidth, window.innerHeight); // Размер рендерера
             document.body.appendChild(renderer.domElement); // добавляем рендерер в DOM
 

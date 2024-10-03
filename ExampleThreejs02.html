@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Example 02</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style> 
+        body {
+            margin: 0;
+            overflow: hidden; /* Убираем прокрутку */
+        }
+        header {
+            text-align: center;
+        }
+       
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Обновления размеров рендерера и камеры</h2>
+        <strong class="message" id="supportMessage"></strong>
+        <canvas id="myCanvas"></canvas>
+    </header>
+    <script>
+        (function () {
+            "use strict";          
+
+            const scene = new THREE.Scene(); // Создаем сцену
+            const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 ); // Создаем камеру с перспективной проекцией
+
+            const canvas = document.getElementById('myCanvas'); // Получаем элемент <canvas> по его id
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas }); // Создаем рендерер и передаем ему элемент <canvas>
+            renderer.setSize( window.innerWidth, window.innerHeight ); // Устанавливаем размеры рендерера в соответствии с размерами окна
+
+            const geometry = new THREE.BoxGeometry( 1, 1, 1 ); // Создаем геометрию куба
+            const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } ); // Создаем материал для куба
+            const cube = new THREE.Mesh( geometry, material ); // Создаем меш куба с геометрией и материалом
+            scene.add( cube ); // Добавляем куб в сцену
+
+            camera.position.z = 5; // Устанавливаем позицию камеры по оси Z
+
+            function animate() { // Функция анимации
+                requestAnimationFrame( animate ); // Запрашиваем следующий кадр анимации
+                // Вращаем куб по осям X и Y
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+                // Рендерим сцену с камерой
+                renderer.render( scene, camera );
+            }
+
+            // Запускаем анимацию
+            animate();
+            
+            // Обработчик события resize для обновления размеров рендерера и камеры
+            window.addEventListener('resize', () => {
+                const width = window.innerWidth; // Получаем текущую ширину окна
+                const height = window.innerHeight; // Получаем текущую высоту окна
+                // Устанавливаем новые размеры рендерера
+                renderer.setSize( width, height );
+                // Обновляем соотношение сторон камеры
+                camera.aspect = width / height;
+                // Обновляем матрицу проекции камеры
+                camera.updateProjectionMatrix();
+            });
+
+        }());
+    </script>
+</body>
+</html>
