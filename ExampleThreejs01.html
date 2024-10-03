@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Example</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        (function () {
+
+        "use strict";
+            // --1-- Создаем сцену
+            const scene = new THREE.Scene();
+
+            // --2-- Создаем камеру
+            const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+            // Параметры: угол обзора, соотношение сторон, ближняя плоскость отсечения, дальняя плоскость отсечения.
+            camera.position.z = 5; // Позиция камеры по оси Z.
+
+            // --3-- Создаем рендерер
+            const renderer = new THREE.WebGLRenderer(); // Рендерер, который будет отображать сцену
+            renderer.setSize(window.innerWidth, window.innerHeight); // Размер рендерера
+            document.body.appendChild(renderer.domElement); // добавляем рендерер в DOM
+
+            // Включаем тени
+            renderer.shadowMap.enabled = true;
+
+            // --4-- Создаем куб
+            const geometry = new THREE.BoxGeometry(); // Создаем геометрию куба
+            const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // создаем материал для куба.
+            const cube = new THREE.Mesh(geometry, material); // Создаем меш (объект, состоящий из геометрии и материала)
+            cube.castShadow = true; // Включаем отбрасывание тени для куба
+            scene.add(cube); // Добавляем куб на сцену
+
+            // --4-- Создаем плоскость (пол)
+            const planeGeometry = new THREE.PlaneGeometry(20, 20); // Создаем геометрию плоскости.
+            const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc }); // Создаем материал для плоскости.
+            const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+            plane.rotation.x = -Math.PI / 2; // Поворачиваем плоскость, чтобы она была горизонтальной
+            plane.position.y = -2; // Помещаем плоскость ниже куба
+            plane.receiveShadow = true; // Включаем получение тени для плоскости
+            scene.add(plane);
+
+            // --5-- Добавляем точечный свет
+            const light = new THREE.PointLight(0xffffff, 1, 100);
+            light.position.set(5, 5, 5); // Устанавливаем позицию света
+            light.castShadow = true; // Включаем отбрасывание тени для света
+            scene.add(light);
+
+            // --7-- Функция анимации
+            function animate() {
+                requestAnimationFrame(animate); //Будет вызываться каждый кадр.
+
+                // --7.1-- Вращаем куб
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+
+                // --7.2-- Рендерим сцену
+                renderer.render(scene, camera);
+            }
+
+            // --6-- Запускаем анимацию
+            animate();
+        }());
+    </script>
+</body>
+</html>
