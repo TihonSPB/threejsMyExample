@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Example 03</title>
+
+    <!--Установка threejs с CDN или статического хостинга-->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            font-family: Arial, verdana, sans-serif; /* шрифты */
+            color: #999999;
+            /*==Обнуление стилей==*/
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            font-size: 12px;
+        }
+        a:hover{
+            color: white;
+        }
+        a {          
+            transition: color 0.3s ease;
+        }
+    
+        /*==Шапка==*/
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #303030;
+            font-size: 14px;
+            color: white;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+        nav ul li {
+            margin-left: 20px;
+        }
+        nav ul li a {
+            
+            text-decoration: none;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+        .search-bar input {
+            padding: 2px 10px;
+            border: none;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+        .search-bar button {
+            padding: 2px 10px;
+            border: none;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            background-color: #545454;           
+            cursor: pointer;
+        }
+
+        /*==Футер==*/
+        footer{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 20px;
+            background-color: #1d1d1d;
+        }
+
+        /*==Меню редактора==*/
+        .menubar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 20px;
+            background-color: #1d1d1d;
+            
+        }
+        .menubar ul {
+            list-style: none;
+            display: flex;
+        }
+        .menubar ul li {
+            position: relative;
+            margin-right: 20px;
+        }
+        .menubar ul li a {
+            padding: 5px 0px;            
+            text-decoration: none;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            padding: 5px 20px;
+            top: 100%;
+            left: -20px;
+            transform: translate(0, 5px);
+            background-color: #1d1d1d;
+            min-width: 160px;
+            z-index: 10;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+        .dropdown-content a {
+            padding: 5px 20px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        /*==Контент==*/
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .content {
+            flex: 1;
+            display: flex;
+        }
+        /*==Окно графики==*/
+        .viwport {
+            flex: 1;
+            display: flex;
+            background-color: #e0e0e0; 
+            /**/
+            position: relative;
+            /**/
+        }
+        
+        #myCanvas {
+            position: absolute;
+        }
+        .viwport ul {
+            list-style: none;
+            position: absolute;
+            margin: 20px;
+                        
+        }
+        .tool {            
+            background-color: #303030;
+            height: 40px;
+            width: 40px;
+            margin-bottom: 2px;
+            border-radius: 5px;
+        }
+        .info {
+            position: absolute;
+            background-color: #303030;
+        } 
+        /*==Панель свойств==*/
+        .properties {
+            min-width: 320px;
+            background-color: #1d1d1d;          
+        }
+        
+
+    </style>
+</head>
+<body>
+    <header><!--Шапка сайта-->
+        <div class="logo">
+            <img href="#" src="#" alt="GRID 3D">
+        </div>
+        <!--Пункты меню сайта--> 
+        <h2>Установка с CDN или статического хостинга</h2>      
+        <nav> 
+            <ul>
+                <li><a href="#">Главная</a></li>
+                <li><a href="#">О нас</a></li>
+                <li><a href="#">Контакты</a></li>
+            </ul>
+        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="Поиск...">
+            <button type="submit">Искать</button>
+        </div>
+    </header>
+    <main role="main">
+        <!--Пункты меню редактора-->
+        <div class="menubar">
+            <ul>
+                <li class="dropdown">
+                    <a href="#">Файл</a>
+                    <div class="dropdown-content">
+                        <a href="#">Услуга 1</a>
+                        <a href="#">Услуга 2</a>
+                        <a href="#">Услуга 3</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Вид</a>
+                    <div class="dropdown-content">
+                        <a href="#">Услуга 1</a>
+                        <a href="#">Услуга 2</a>
+                        <a href="#">Услуга 3</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Инструменты</a>
+                    <div class="dropdown-content">
+                        <a href="#">Услуга 1</a>
+                        <a href="#">Услуга 2</a>
+                        <a href="#">Услуга 3</a>
+                    </div>
+                </li>
+            </ul>
+            <p>
+                дополнительная информация
+            </p>
+        </div>        
+        
+        <div class="content">
+            <div class="viwport"><!--Окно графики-->
+                <canvas id="myCanvas"></canvas>
+                <ul>                    
+                    <li class="tool">
+                        1
+                    </li>
+                    <li class="tool">
+                        2
+                    </li>
+                    <li class="tool">
+                        3
+                    </li>
+                </ul>
+                <div class="info">info</div>
+            </div>
+            <div class="properties"><!--Панель свойств-->
+                properties
+            </div>
+        </div>
+        
+    </main>
+    <footer>
+        <p>&copy; 2024 Grid3d | Tihon</p>
+        <p>v 0.0.0</p>
+    </footer>
+
+    <script type="module">
+
+        import * as THREE from 'three';
+
+        (function () {
+            "use strict"; 
+            
+            const viwport = document.querySelector('.viwport');
+            
+            const width = viwport.clientWidth; // Получаем ширину viwport
+            const height = viwport.clientHeight; // Получаем высоту viwport
+
+            const scene = new THREE.Scene(); // Создаем сцену
+            const camera = new THREE.PerspectiveCamera( 55, width / height, 0.1, 1000 ); // Создаем камеру с перспективной проекцией
+
+            const canvas = document.getElementById('myCanvas'); // Получаем элемент <canvas> по его id
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true}); // Создаем рендерер и передаем ему элемент <canvas>
+            renderer.setSize( width, height ); // Устанавливаем размеры рендерера в соответствии с размерами окна
+
+            const geometry = new THREE.BoxGeometry( 1, 1, 1 ); // Создаем геометрию куба
+            const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } ); // Создаем материал для куба
+            const cube = new THREE.Mesh( geometry, material ); // Создаем меш куба с геометрией и материалом
+            scene.add( cube ); // Добавляем куб в сцену
+
+            camera.position.z = 5; // Устанавливаем позицию камеры по оси Z
+
+            function animate() { // Функция анимации
+                requestAnimationFrame( animate ); // Запрашиваем следующий кадр анимации
+                // Вращаем куб по осям X и Y
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+                // Рендерим сцену с камерой
+                renderer.render( scene, camera );
+            }
+
+            // Запускаем анимацию
+            animate();
+            
+            // Обработчик события resize для обновления размеров рендерера и камеры
+            window.addEventListener('resize', () => {
+                const viwport = document.querySelector('.viwport');
+                const width = viwport.clientWidth; // Получаем ширину viwport
+                const height = viwport.clientHeight; // Получаем высоту viwport
+
+                console.log(`Ширина viwport: ${width}px`);
+                console.log(`Высота viwport: ${height}px`);
+                
+                // Устанавливаем новые размеры рендерера
+                renderer.setSize( width, height );
+                // Обновляем соотношение сторон камеры
+                camera.aspect = width / height;
+                // Обновляем матрицу проекции камеры
+                camera.updateProjectionMatrix();
+            });
+
+        }());
+    </script>    
+</body>
+</html>
