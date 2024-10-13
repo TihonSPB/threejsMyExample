@@ -39,9 +39,11 @@
         a:hover{
             color: white;
         }
-        a {          
+        a { 
+            text-decoration: none;         
             transition: color 0.3s ease;
         }
+        
     
         /*==Шапка==*/
         header {
@@ -50,9 +52,16 @@
             align-items: center;
             padding: 10px 20px;
             background-color: #303030;
-            font-size: 14px;
+            font-size: 14px;            
+        }
+        header * {
             color: white;
         }
+
+        header a:hover{
+            color: #FF9900;
+        }
+
         nav ul {
             list-style: none;
             display: flex;
@@ -60,11 +69,6 @@
         nav ul li {
             margin-left: 20px;
         }
-        nav ul li a {
-            
-            text-decoration: none;
-        }
-
         .search-bar {
             display: flex;
             align-items: center;
@@ -149,14 +153,13 @@
         .viwport {
             flex: 1;
             display: flex;
-            background-color: #e0e0e0; 
-            /**/
+            background-color: #1d1d1d;
             position: relative;
-            /**/
         }
         
         #myCanvas {
             position: absolute;
+            border-radius: 5px;
         }
         .viwport ul {
             list-style: none;
@@ -173,21 +176,64 @@
         }
         .info {
             position: absolute;
-            background-color: #303030;
+            padding: 2px 5px;
+            bottom: 5px;
+            left: 20px;
+            background-color: #1d1d1d;
+            border-radius: 5px;
         } 
+        .navigate {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #303030;
+            height: 80px;
+            width: 80px;
+            border-radius: 5px;
+        }
         /*==Панель свойств==*/
         .properties {
             min-width: 320px;
-            background-color: #1d1d1d;          
+            background-color: #1d1d1d; 
+            padding: 0px 5px;        
         }
+        .properties * {
+            color: #bababa;
+        }
+        .properties h1 {
+            font-size: 14px;
+            color: white;
+            background-color: #545454;
+            padding: 5px 10px;
+            border-radius: 5px; 
+
+        }
+        .properties div {
+            background-color: #303030;
+            border-radius: 5px;            
+            margin-bottom: 5px;
+        }       
         
+        .tree,
+        .tree ul,
+        .tree li {
+            list-style: none outside none;
+        }
+        .tree {
+            padding: 10px 0px 20px 20px;
+        }
+        .tree ul ul {            
+            padding-left: 20px;
+            border-left : 1px solid;
+            color: #999999;
+        }             
 
     </style>
 </head>
 <body>
     <header><!--Шапка сайта-->
         <div class="logo">
-            <img href="#" src="#" alt="GRID 3D">
+            <img href="#" src="#" alt="# Grid3d">
         </div>
         <!--Пункты меню сайта--> 
         <h2>Установка с CDN или статического хостинга</h2>      
@@ -251,10 +297,141 @@
                         3
                     </li>
                 </ul>
-                <div class="info">info</div>
+                <div class="info">
+                    Информация по использованию инструментов
+                </div>
+                <div class="navigate">
+                    Навигация
+                </div>
             </div>
             <div class="properties"><!--Панель свойств-->
-                properties
+                <div class="scene-elements">
+                    <h1>Диспетчер элементов сцены</h1>
+                    <div class="tree">
+                    <ul>
+                        <li>
+                            <details open>
+                                <summary>Свет</summary>
+                                <ul>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>
+
+                        <li>
+                            <details open>
+                                <summary>Геометрия</summary>
+                                <ul>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>
+
+                        <li>
+                            <details open>
+                                <summary>Группы</summary>
+                                <ul>
+                                    <li>
+                                        <details>
+                                            <summary><a href="">Элемент вложенного списка первого уровня</a></summary>
+                                            <ul>
+                                                <li>
+                                                    <a href="">Элемент вложенного списка второго уровня</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">Элемент вложенного списка второго уровня</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">Элемент вложенного списка второго уровня</a>
+                                                </li>
+                                            </ul>
+                                        </details>
+                                    </li>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                    <li>
+                                        <details>
+                                            <summary><a href="">Элемент вложенного списка первого уровня</a></summary>
+                                            <ul>
+                                                <li>
+                                                    <a href="">Элемент вложенного списка второго уровня</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">Элемент вложенного списка второго уровня</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">Элемент вложенного списка второго уровня</a>
+                                                </li>
+                                            </ul>
+                                        </details>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>                       
+                    </ul>
+                    </div>
+                                        
+                    
+                </div>
+                <div class="object-property">
+                    <h1>Cвойство объекта</h1>
+
+                    <div class="tree">
+                        <ul>
+                            <li>
+                                <details open>
+                                    <summary>Свет</summary>
+                                    <ul>
+                                        <li>
+                                            <a href="">Элемент вложенного списка первого уровня</a>
+                                        </li>
+                                    </ul>
+                                </details>
+                            </li>
+    
+                            <li>
+                                <details open>
+                                    <summary>Геометрия</summary>
+                                    <ul>
+                                        <li>
+                                            <a href="">Элемент вложенного списка первого уровня</a>
+                                        </li>
+                                    </ul>
+                                </details>
+                            </li>
+    
+                            <li>
+                                <details open>
+                                    <summary>Группы</summary>
+                                    <ul>                                        
+                                        <li>
+                                            <a href="">Элемент вложенного списка первого уровня</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </details>
+                            </li>                       
+                        </ul>
+                    </div>
+
+                </div>
             </div>
         </div>
         
@@ -284,7 +461,7 @@
             renderer.setSize( width, height ); // Устанавливаем размеры рендерера в соответствии с размерами окна
 
             const geometry = new THREE.BoxGeometry( 1, 1, 1 ); // Создаем геометрию куба
-            const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } ); // Создаем материал для куба
+            const material = new THREE.MeshBasicMaterial( { color: 0xFF9900 } ); // Создаем материал для куба
             const cube = new THREE.Mesh( geometry, material ); // Создаем меш куба с геометрией и материалом
             scene.add( cube ); // Добавляем куб в сцену
 
