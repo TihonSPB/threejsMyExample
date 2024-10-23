@@ -470,11 +470,59 @@
             const canvas = document.getElementById('myCanvas'); // Получаем элемент <canvas> по его id
             const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true}); // Создаем рендерер и передаем ему элемент <canvas>
             renderer.setSize( viwportWidth, viwportHeight ); // Устанавливаем размеры рендерера в соответствии с размерами окна
-
+            renderer.setClearColor(0x393939); //Фон сцены
 
             ////// Настройка OrbitControls
 
-            const controls = new OrbitControls( camera, renderer.domElement );
+            const controls = new OrbitControls( camera, renderer.domElement ); // Создаем контроллер управления камерой + добавляем к анимации
+            // Параметры OrbitControls:
+            // controls.panSpeed = 3; // Скорость панорамирования 
+            // controls.rotateSpeed = 1.0; // Устанавливает скорость вращения.
+            // controls.zoomSpeed = 1.2; // Устанавливает скорость масштабирования.
+            // controls.enabled = false; // Включает или отключает контроллер
+            // controls.target.set(0, 5, 0); // Устанавливает точку, на которую смотрит камера
+            // controls.minDistance = 1; // Минимальное расстояние, на которое камера может приближаться
+            // controls.maxDistance = 100; // Максимальное расстояние, на которое камера отдаляться
+            // controls.minZoom = 0.5; // Устанавливает минимальный уровень масштабирования.
+            // controls.maxZoom = 2; // Устанавливает максимальный уровень масштабирования.
+            // controls.minPolarAngle = 0; // Устанавливает минимальный угол полярной оси (вертикальное вращение).
+            // controls.maxPolarAngle = Math.PI / 2; //Устанавливает максимальный угол полярной оси (вертикальное вращение).
+            // controls.minAzimuthAngle = -Math.PI; // Устанавливает минимальный угол азимутальной оси (горизонтальное вращение)
+            // controls.maxAzimuthAngle = Math.PI; // Устанавливает максимальный угол азимутальной оси (горизонтальное вращение)
+            // controls.enableDamping = true; // Затухание (инерция) при вращении, панорамировании
+            // controls.dampingFactor = 0.05; // Коэффициент затухания
+            // controls.enableZoom = false; // Включает или отключает масштабирование (прокрутку колесика мыши)
+            // controls.enableRotate = false; // Включает или отключает вращение (перетаскивание мыши)
+            // controls.enablePan = false; // Включает или отключает панорамирование (перетаскивание мыши с зажатой клавишей).
+            // controls.screenSpacePanning = false; // Определяет, будет ли панорамирование происходить в пространстве экрана (true) или в мировом пространстве (false).
+            // controls.autoRotate = true; // Автоматически вращает камеру вокруг цели
+            // controls.autoRotateSpeed = 5.0; // Устанавливает скорость автоматического вращения.
+            // controls.reset(); // Сбрасывает контроллеры в исходное состояние
+            // controls.dispose(); // Освобождает ресурсы, связанные с контроллерами
+            controls.mouseButtons = { // Настраивает кнопки мыши для различных действий (вращение, панорамирование, масштабирование).
+                LEFT: THREE.MOUSE.ROTATE,
+                MIDDLE: THREE.MOUSE.PAN,
+                RIGHT: THREE.MOUSE.DOLLY
+            };
+            /*
+            controls.touches = { // Настраивает жесты для различных действий на сенсорных устройствах.
+                ONE: THREE.TOUCH.ROTATE,
+                TWO: THREE.TOUCH.DOLLY_PAN
+            };
+            */
+            controls.keys = { // Настраивает клавиши для различных действий (вращение, панорамирование, масштабирование).
+                LEFT: 'ArrowLeft', // Стрелка влево
+                UP: 'ArrowUp', // Стрелка вверх
+                RIGHT: 'ArrowRight', // Стрелка вправо
+                BOTTOM: 'ArrowDown' // Стрелка вниз
+            };
+            controls.listenToKeyEvents(window);
+            // controls.keyPanSpeed = 7.0; // Скорость панорамирования при использовании клавиатуры
+
+            ////// Добавление сетки
+
+            const myGrid = new THREE.GridHelper(50, 100);
+            scene.add( myGrid );
 
             ////// Добавление куба
 
@@ -485,8 +533,8 @@
 
             ////// Настройка позиции камеры
 
-            camera.position.z = 5; // Немного выдвигаем камеру
-            //camera.position.set( 0, 5, 5 ); // Альтернатива позиции камеры
+            //camera.position.z = 5; // Немного выдвигаем камеру
+            camera.position.set( 5, 5, 5 ); // Альтернатива позиции камеры
             camera.lookAt( 0, 0, 0 ); // точка направления камеры
 
             ////// Функция анимации вращения объекта
@@ -502,7 +550,7 @@
             function animate() { // Цикл, заставляет средство визуализации отрисовывать сцену каждый раз при обновлении экрана
                 requestAnimationFrame( animate ); // Запрашиваем следующий кадр анимации
 
-                controls.update();
+                controls.update(); // Обновление контроллера
 
                 //rotationMesh(cube);
                 
