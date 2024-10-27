@@ -43,7 +43,7 @@
             const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc }); // Создаем материал для плоскости.
             const plane = new THREE.Mesh(planeGeometry, planeMaterial);
             plane.rotation.x = -Math.PI / 2; // Поворачиваем плоскость, чтобы она была горизонтальной
-            plane.position.y = -2; // Помещаем плоскость ниже куба
+            plane.position.y = -1; // Помещаем плоскость ниже куба
             plane.receiveShadow = true; // Включаем получение тени для плоскости
             scene.add(plane);
 
