@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Example 03</title>
+
+    <style>
+        * {
+            font-family: Arial, verdana, sans-serif; /* шрифты */
+            color: #999999;
+            /*==Обнуление стилей==*/
+            margin: 0;
+            padding: 0;
+            border: 0;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            font-size: 12px;
+            background-color: #1d1d1d;
+        }
+        a:hover{
+            color: white;
+        }
+        a { 
+            text-decoration: none;         
+            transition: color 0.3s ease;
+        }
+        
+    
+        /*==Шапка==*/
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #303030;
+            font-size: 14px;            
+        }
+        header * {
+            color: white;
+        }
+
+        header a:hover{
+            color: #FF9900;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+        nav ul li {
+            margin-left: 20px;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+        .search-bar input {
+            padding: 2px 10px;
+            border: none;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+        .search-bar button {
+            padding: 2px 10px;
+            border: none;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            background-color: #545454;           
+            cursor: pointer;
+        }
+
+        /*==Футер==*/
+        footer{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 20px;            
+        }
+
+        /*==Меню редактора==*/
+        .menubar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 20px;            
+        }
+        .menubar ul {
+            list-style: none;
+            display: flex;
+        }
+        .menubar ul li {
+            position: relative;
+            margin-right: 20px;
+        }
+        .menubar ul li a {
+            padding: 5px 0px;            
+            text-decoration: none;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            padding: 5px 20px;
+            top: 100%;
+            left: -20px;
+            transform: translate(0, 5px);
+            background-color: #1d1d1d;
+            min-width: 160px;
+            z-index: 10;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+        .dropdown-content a {
+            padding: 5px 20px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        /*==Контент==*/
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .content {
+            flex: 1;
+            display: flex;
+        }
+        /*==Окно графики==*/
+        .viwport {
+            flex: 1;
+            display: flex;
+            position: relative;
+            margin-left: 5px;
+        }
+        
+        #myCanvas {
+            position: absolute;
+            border-radius: 5px;
+        }
+        .viwport ul {
+            list-style: none;
+            position: absolute;
+            margin: 20px;
+                        
+        }
+        .tool {            
+            background-color: #303030;
+            height: 40px;
+            width: 40px;
+            margin-bottom: 2px;
+            border-radius: 5px;
+        }
+        .info {
+            position: absolute;
+            padding: 2px 5px;
+            bottom: 5px;
+            left: 20px;
+            background-color: #1d1d1d;
+            border-radius: 5px;
+        } 
+        .navigate {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #303030;
+            height: 80px;
+            width: 80px;
+            border-radius: 5px;
+        }
+        /*==Панель свойств==*/
+        .properties {
+            min-width: 320px;
+            padding: 0px 5px;
+        }
+        .properties * {
+            color: #bababa;
+        }
+        .properties h1 {
+            font-size: 14px;
+            color: white;
+            background-color: #545454;
+            padding: 5px 10px;
+            border-radius: 5px; 
+
+        }
+        .properties div {
+            background-color: #303030;
+            border-radius: 5px;            
+            margin-bottom: 5px;
+        }       
+        
+        .tree,
+        .tree ul,
+        .tree li {
+            list-style: none outside none;
+        }
+        .tree {
+            padding: 10px 0px 20px 20px;
+        }
+        .tree ul ul {            
+            padding-left: 20px;
+            border-left : 1px solid;
+            color: #999999;
+        }             
+
+    </style>
+</head>
+<body>
+    <header><!--Шапка сайта-->
+        <div class="logo">
+            <img href="#" src="#" alt="# Grid3d">
+        </div>
+        <!--Пункты меню сайта--> 
+        <h2>IFCLoader</h2>      
+        <nav> 
+            <ul>
+                <li><a href="#">Главная</a></li>
+                <li><a href="#">О нас</a></li>
+                <li><a href="#">Контакты</a></li>
+            </ul>
+        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="Поиск...">
+            <button type="submit">Искать</button>
+        </div>
+    </header>
+    <main role="main">
+        <!--Пункты меню редактора-->
+        <div class="menubar">
+            <ul>
+                <li class="dropdown">
+                    <a href="#">Файл</a>
+                    <div class="dropdown-content">
+                        <a href="#">Услуга 1</a>
+                        <a href="#">Услуга 2</a>
+                        <a href="#">Услуга 3</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Вид</a>
+                    <div class="dropdown-content">
+                        <a href="#">Услуга 1</a>
+                        <a href="#">Услуга 2</a>
+                        <a href="#">Услуга 3</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Инструменты</a>
+                    <div class="dropdown-content">
+                        <a href="#">Услуга 1</a>
+                        <a href="#">Услуга 2</a>
+                        <a href="#">Услуга 3</a>
+                    </div>
+                </li>
+            </ul>
+            <p>
+                дополнительная информация
+            </p>
+        </div>        
+        
+        <div class="content">
+            <div class="viwport"><!--Окно графики-->
+                <canvas id="myCanvas"></canvas>
+                <ul>                    
+                    <li class="tool">
+                        1
+                    </li>
+                    <li class="tool">
+                        2
+                    </li>
+                    <li class="tool">
+                        3
+                    </li>
+                </ul>
+                <div class="info">
+                    Информация по использованию инструментов
+                </div>
+                <div class="navigate">
+                    Навигация
+                </div>
+            </div>
+            <div class="properties"><!--Панель свойств-->
+                <div class="scene-elements">
+                    <h1>Диспетчер элементов сцены</h1>
+                    <div class="tree">
+                    <ul>
+                        <li>
+                            <details open>
+                                <summary>Свет</summary>
+                                <ul>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>
+
+                        <li>
+                            <details open>
+                                <summary>Геометрия</summary>
+                                <ul>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>
+
+                        <li>
+                            <details open>
+                                <summary>Группы</summary>
+                                <ul>
+                                    <li>
+                                        <details>
+                                            <summary><a href="">Элемент вложенного списка первого уровня</a></summary>
+                                            <ul>
+                                                <li>
+                                                    <a href="">Элемент вложенного списка второго уровня</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">Элемент вложенного списка второго уровня</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">Элемент вложенного списка второго уровня</a>
+                                                </li>
+                                            </ul>
+                                        </details>
+                                    </li>
+                                    <li>
+                                        <a href="">Элемент вложенного списка первого уровня</a>
+                                    </li>
+                                    <li>
+                                        <details>
+                                            <summary><a href="">Элемент вложенного списка первого уровня</a></summary>
+                                            <ul>
+                                                <li>
+                                                    <a href="">Элемент вложенного списка второго уровня</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">Элемент вложенного списка второго уровня</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">Элемент вложенного списка второго уровня</a>
+                                                </li>
+                                            </ul>
+                                        </details>
+                                    </li>
+                                </ul>
+                            </details>
+                        </li>                       
+                    </ul>
+                    </div>                                        
+                </div>
+
+                <div class="object-property">
+                    <h1>Cвойство объекта</h1>
+
+                    <div class="tree">
+                        <ul>
+                            <li>
+                                <details open>
+                                    <summary>Свет</summary>
+                                    <ul>
+                                        <li>
+                                            <a href="">Элемент вложенного списка первого уровня</a>
+                                        </li>
+                                    </ul>
+                                </details>
+                            </li>
+    
+                            <li>
+                                <details open>
+                                    <summary>Геометрия</summary>
+                                    <ul>
+                                        <li>
+                                            <a href="">Элемент вложенного списка первого уровня</a>
+                                        </li>
+                                    </ul>
+                                </details>
+                            </li>
+    
+                            <li>
+                                <details open>
+                                    <summary>Группы</summary>
+                                    <ul>                                        
+                                        <li>
+                                            <a href="">Элемент вложенного списка первого уровня</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </details>
+                            </li>                       
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+    </main>
+    <footer>
+        <p>&copy; 2024 Grid3d | Tihon</p>
+        <p>v 0.0.0</p>
+    </footer>
+
+    <!--Установка threejs с CDN или статического хостинга-->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/",
+
+                "three/examples/jsm/utils/BufferGeometryUtils": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/utils/BufferGeometryUtils.js",
+                "three-mesh-bvh": "https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.5.23/build/index.module.js",
+                "web-ifc": "https://cdn.jsdelivr.net/npm/web-ifc@0.0.36/web-ifc-api.js",
+                "web-ifc-three": "https://cdn.jsdelivr.net/npm/web-ifc-three@0.0.126/IFCLoader.js"
+            }
+        }
+    </script>
+
+    <script type="module">
+        
+        //////  Загрузка three.js
+
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { IFCSPACE } from 'web-ifc';
+        import { IFCLoader } from 'web-ifc-three';
+
+        import { Sky } from 'three/addons/objects/Sky.js';
+
+        (function () {
+            "use strict"; 
+
+            ////// Размеры viwport для canvas
+
+            const viwport = document.querySelector('.viwport');
+            const viwportWidth = viwport.clientWidth; // Получаем ширину viwport
+            const viwportHeight = viwport.clientHeight; // Получаем высоту viwport
+
+            ////// Создание сцены и камеры
+
+            const scene = new THREE.Scene(); // Создаем сцену
+
+            // Создаем перспективную камеру
+            const perspectiveCamera = new THREE.PerspectiveCamera( 55, viwportWidth / viwportHeight, 0.1, 1000 ); // Создаем камеру с перспективной проекцией
+            // 55 - FOV указано в градусах
+            // window.innerWidth / window.innerHeight - соотношение сторон
+            // 0.1 - near ближняя плоскость отсечения
+            // 1000 - far дальняя плоскость отсечения
+            // Настройка позиции камеры
+            //camera.position.z = 5; // Немного выдвигаем камеру
+            perspectiveCamera.position.set( 5, 5, 5 ); // Альтернатива позиции камеры
+            perspectiveCamera.lookAt( 0, 0, 0 ); // точка направления камеры
+
+            // Создаем ортографическую камеру
+            const aspect = viwportWidth / viwportHeight;
+            const orthographicCamera = new THREE.OrthographicCamera(-aspect, aspect, 1, -1, 0.1, 1000);
+            orthographicCamera.position.set( 5, 5, 5 );
+            orthographicCamera.lookAt( 0, 0, 0 );
+
+            ////// Создание рендера
+
+            const canvas = document.getElementById('myCanvas'); // Получаем элемент <canvas> по его id
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true}); // Создаем рендерер и передаем ему элемент <canvas>
+            renderer.setSize( viwportWidth, viwportHeight ); // Устанавливаем размеры рендерера в соответствии с размерами окна
+            renderer.setClearColor(0x393939); //Фон сцены
+
+            renderer.shadowMap.enabled = true; // Включаем тени
+
+            ////// Настройка OrbitControls
+
+            const controls = new OrbitControls( perspectiveCamera, renderer.domElement ); // Создаем контроллер управления камерой + добавляем к анимации
+            // Параметры OrbitControls:
+            // controls.panSpeed = 3; // Скорость панорамирования 
+            // controls.rotateSpeed = 1.0; // Устанавливает скорость вращения.
+            // controls.zoomSpeed = 1.2; // Устанавливает скорость масштабирования.
+            // controls.enabled = false; // Включает или отключает контроллер
+            // controls.target.set(0, 5, 0); // Устанавливает точку, на которую смотрит камера
+            // controls.minDistance = 1; // Минимальное расстояние, на которое камера может приближаться
+            // controls.maxDistance = 100; // Максимальное расстояние, на которое камера отдаляться
+            // controls.minZoom = 0.5; // Устанавливает минимальный уровень масштабирования.
+            // controls.maxZoom = 2; // Устанавливает максимальный уровень масштабирования.
+            // controls.minPolarAngle = 0; // Устанавливает минимальный угол полярной оси (вертикальное вращение).
+            // controls.maxPolarAngle = Math.PI / 2; //Устанавливает максимальный угол полярной оси (вертикальное вращение).
+            // controls.minAzimuthAngle = -Math.PI; // Устанавливает минимальный угол азимутальной оси (горизонтальное вращение)
+            // controls.maxAzimuthAngle = Math.PI; // Устанавливает максимальный угол азимутальной оси (горизонтальное вращение)
+            // controls.enableDamping = true; // Затухание (инерция) при вращении, панорамировании
+            // controls.dampingFactor = 0.05; // Коэффициент затухания
+            // controls.enableZoom = false; // Включает или отключает масштабирование (прокрутку колесика мыши)
+            // controls.enableRotate = false; // Включает или отключает вращение (перетаскивание мыши)
+            // controls.enablePan = false; // Включает или отключает панорамирование (перетаскивание мыши с зажатой клавишей).
+            // controls.screenSpacePanning = false; // Определяет, будет ли панорамирование происходить в пространстве экрана (true) или в мировом пространстве (false).
+            // controls.autoRotate = true; // Автоматически вращает камеру вокруг цели
+            // controls.autoRotateSpeed = 5.0; // Устанавливает скорость автоматического вращения.
+            // controls.reset(); // Сбрасывает контроллеры в исходное состояние
+            // controls.dispose(); // Освобождает ресурсы, связанные с контроллерами
+            controls.mouseButtons = { // Настраивает кнопки мыши для различных действий (вращение, панорамирование, масштабирование).
+                //LEFT: THREE.MOUSE.ROTATE,
+                MIDDLE: THREE.MOUSE.PAN,
+                //RIGHT: THREE.MOUSE.DOLLY
+            };
+            /*
+            controls.touches = { // Настраивает жесты для различных действий на сенсорных устройствах.
+                ONE: THREE.TOUCH.ROTATE,
+                TWO: THREE.TOUCH.DOLLY_PAN
+            };
+            */
+            controls.keys = { // Настраивает клавиши для различных действий (вращение, панорамирование, масштабирование).
+                LEFT: 'ArrowLeft', // Стрелка влево
+                UP: 'ArrowUp', // Стрелка вверх
+                RIGHT: 'ArrowRight', // Стрелка вправо
+                BOTTOM: 'ArrowDown' // Стрелка вниз
+            };
+            controls.listenToKeyEvents(window);
+            // controls.keyPanSpeed = 7.0; // Скорость панорамирования при использовании клавиатуры
+
+            ////// Добавление сетки
+
+            const size = 50; // Размер сетки
+            const divisions = 50; // Сетка разделена на 50 частей по каждой оси
+            const color1 = 0xffffff; // Цвет для основных линий
+            const color2 = "grey"; // Цвет для вспомогательных линий
+
+            const myGrid = new THREE.GridHelper(size, divisions, color1, color2);
+            scene.add(myGrid);
+
+            // myGrid.position.set(0, 0, 0); // Устанавливаем позицию сетки
+            // myGrid.rotation.x = Math.PI / 2; // Поворачиваем сетку на 90 градусов по оси X
+            // myGrid.scale.set(2, 2, 2); // Увеличиваем сетку в 2 раза
+
+            ////// Добавление осей
+
+            const axesHelper = new THREE.AxesHelper(25);
+            scene.add(axesHelper);
+
+            ////// Свет
+
+            // Добавляем общее освещение
+
+            const ambientLight = new THREE.AmbientLight( 0xffffee, 0.75 );
+            scene.add( ambientLight );
+
+            // Добавляем точечный свет
+            
+            const light = new THREE.PointLight(0xffffff, 25, 200);
+            light.position.set(5, 5, -5); // Устанавливаем позицию света
+            light.castShadow = true; // Включаем отбрасывание тени для света
+            scene.add(light);
+
+            // Add Sky Добавить небо и настройку в виде.
+            /*
+            const sky = new Sky();
+            sky.scale.setScalar( 450000 );
+            scene.add( sky );
+
+            const sun = new THREE.Vector3();
+
+            const effectController = {
+                turbidity: 10,
+                rayleigh: 3,
+                mieCoefficient: 0.005,
+                mieDirectionalG: 0.7,
+                elevation: 2,
+                azimuth: 180,
+                exposure: renderer.toneMappingExposure
+            };
+            */
+
+            ////// Добавление куба
+
+            const geometry = new THREE.BoxGeometry( 1, 1, 1 ); // Создаем геометрию куба
+            const material = new THREE.MeshStandardMaterial( { color: 0xFF9900 } ); // Создаем материал для куба 
+            // материалы бывают MeshBasicMaterial MeshStandardMaterial
+            const cube = new THREE.Mesh( geometry, material ); // Создаем меш куба с геометрией и материалом
+            scene.add( cube ); // Добавляем куб в сцену
+            cube.position.y = 1;
+            cube.castShadow = true; // Включаем отбрасывание тени для куба
+
+            ////// Создаем плоскость (пол)
+
+            const planeGeometry = new THREE.PlaneGeometry(50, 50); // Создаем геометрию плоскости.
+            const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc }); // Создаем материал для плоскости.
+            const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+            scene.add(plane);
+            plane.rotation.x = -Math.PI / 2; // Поворачиваем плоскость, чтобы она была горизонтальной            
+            plane.receiveShadow = true; // Включаем получение тени для плоскости
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+            const ifcLoader = new IFCLoader();
+
+            await ifcLoader.ifcManager.setWasmPath( 'https://cdn.jsdelivr.net/npm/web-ifc@0.0.36/', true );
+
+            await ifcLoader.ifcManager.parser.setupOptionalCategories( {
+                [ IFCSPACE ]: false,
+            } );
+
+            await ifcLoader.ifcManager.applyWebIfcConfig( {
+                USE_FAST_BOOLS: true
+            } );
+
+            ifcLoader.load( 'models/ifc/RAC_basic_sample_project.ifc', function ( model ) {
+
+                scene.add( model.mesh );
+                render();
+
+            } );
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            // Создаем загрузчик для IFC файлов
+            var ifcLoader = new IFCLoader();
+
+            // Функция для загрузки IFC файла
+            function loadIFCFile(url) {
+                ifcLoader.load(url, function (ifcModel) {
+                    // Добавляем загруженную модель на сцену
+                    scene.add(ifcModel);
+
+                    // Центрируем камеру относительно модели
+                    var box = new THREE.Box3().setFromObject(ifcModel);
+                    var center = box.getCenter(new THREE.Vector3());
+                    camera.position.set(center.x, center.y, box.max.z + 10);
+                    camera.lookAt(center);
+                });
+            }
+
+            // Загружаем IFC файл
+            loadIFCFile('models/ifc/RAC_basic_sample_project.ifc');
+            */
+
+            // Создаем загрузчик для IFC файлов
+            const ifcLoader = new IFCLoader();
+
+            ifcLoader.load('models/ifc/RAC_basic_sample_project.ifc', (ifcModel) => scene.add(ifcModel.mash));
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            ////// Функция анимации вращения объекта
+
+            function rotationMesh(rMash) {
+                // Вращаем объект по осям X и Y
+                rMash.rotation.x += 0.01;
+                rMash.rotation.y += 0.01;
+            }
+
+            ////// Рендеринг сцены
+
+            function animate() { // Цикл, заставляет средство визуализации отрисовывать сцену каждый раз при обновлении экрана
+                requestAnimationFrame( animate ); // Запрашиваем следующий кадр анимации
+
+                controls.update(); // Обновление контроллера
+
+                rotationMesh(cube);
+                
+                // Рендерим сцену с камерой
+                renderer.render( scene, perspectiveCamera );
+            }
+
+            // Запускаем анимацию
+            animate();
+            
+            // Обработчик события resize для обновления размеров рендерера и камеры
+            window.addEventListener('resize', () => {
+                const viwport = document.querySelector('.viwport');
+                const width = viwport.clientWidth; // Получаем ширину viwport
+                const height = viwport.clientHeight; // Получаем высоту viwport
+
+                console.log(`Ширина viwport: ${width}px`);
+                console.log(`Высота viwport: ${height}px`);
+                
+                // Устанавливаем новые размеры рендерера
+                renderer.setSize( width, height );
+                // Обновляем соотношение сторон камеры
+                perspectiveCamera.aspect = width / height;
+                // Обновляем матрицу проекции камеры
+                perspectiveCamera.updateProjectionMatrix();
+            });
+
+        }());
+    </script>    
+</body>
+</html>
