@@ -454,7 +454,7 @@
 
         import { Sky } from 'three/addons/objects/Sky.js';
 
-        (function () {
+        (async function () {
             "use strict"; 
 
             ////// Размеры viwport для canvas
@@ -602,17 +602,8 @@
             cube.position.y = 1;
             cube.castShadow = true; // Включаем отбрасывание тени для куба
 
-            ////// Создаем плоскость (пол)
-
-            const planeGeometry = new THREE.PlaneGeometry(50, 50); // Создаем геометрию плоскости.
-            const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc }); // Создаем материал для плоскости.
-            const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-            scene.add(plane);
-            plane.rotation.x = -Math.PI / 2; // Поворачиваем плоскость, чтобы она была горизонтальной            
-            plane.receiveShadow = true; // Включаем получение тени для плоскости
-
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
+
             const ifcLoader = new IFCLoader();
 
             await ifcLoader.ifcManager.setWasmPath( 'https://cdn.jsdelivr.net/npm/web-ifc@0.0.36/', true );
@@ -631,7 +622,7 @@
                 render();
 
             } );
-
+/*
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // Создаем загрузчик для IFC файлов
@@ -653,14 +644,18 @@
 
             // Загружаем IFC файл
             loadIFCFile('models/ifc/RAC_basic_sample_project.ifc');
-            */
+            
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             // Создаем загрузчик для IFC файлов
             const ifcLoader = new IFCLoader();
 
             ifcLoader.load('models/ifc/RAC_basic_sample_project.ifc', (ifcModel) => scene.add(ifcModel.mash));
-
+*/
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            
 
             ////// Функция анимации вращения объекта
 
