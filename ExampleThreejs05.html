@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Example 03</title>
+    <title>Three.js Example 05</title>
 
     <style>
         * {
@@ -454,7 +454,7 @@
 
         import { Sky } from 'three/addons/objects/Sky.js';
 
-        (async function () {
+        (function () {
             "use strict"; 
 
             ////// Размеры viwport для canvas
@@ -604,27 +604,34 @@
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+            // Создаем новый экземпляр загрузчика IFC (Industry Foundation Classes)
             const ifcLoader = new IFCLoader();
 
-            await ifcLoader.ifcManager.setWasmPath( 'https://cdn.jsdelivr.net/npm/web-ifc@0.0.36/', true );
+            // Устанавливаем путь к WASM (WebAssembly) файлам для парсера IFC
+            // Используем CDN для загрузки файлов и указываем, что путь является абсолютным
+            ifcLoader.ifcManager.setWasmPath( 'https://cdn.jsdelivr.net/npm/web-ifc@0.0.36/', true );
 
-            await ifcLoader.ifcManager.parser.setupOptionalCategories( {
-                [ IFCSPACE ]: false,
+            // Настройка опциональных категорий для парсера IFC
+            ifcLoader.ifcManager.parser.setupOptionalCategories( {
+                [ IFCSPACE ]: false, //IFCSPACE, не будут загружены и обработаны
             } );
 
-            await ifcLoader.ifcManager.applyWebIfcConfig( {
+            // Применяем конфигурацию для парсера IFC
+            // Включаем использование быстрых булевых операций
+            ifcLoader.ifcManager.applyWebIfcConfig( {
                 USE_FAST_BOOLS: true
             } );
 
+            // Загружаем IFC модель из указанного файла
+            // После загрузки добавляем ее меш в сцену
             ifcLoader.load( 'models/ifc/RAC_basic_sample_project.ifc', function ( model ) {
-
+                // Добавляем меш модели в сцену
                 scene.add( model.mesh );
-                render();
-
+                //render();
             } );
-/*
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
             // Создаем загрузчик для IFC файлов
             var ifcLoader = new IFCLoader();
 
