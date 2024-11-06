@@ -595,16 +595,24 @@
             sunLight.position.copy(sun); // Устанавливаем позицию света в позицию солнца
 
             sunLight.castShadow = true; // Включаем отбрасывание теней
-            sunLight.shadow.camera.left = -10;
-            sunLight.shadow.camera.right = 10;
-            sunLight.shadow.camera.top = 10;
-            sunLight.shadow.camera.bottom = 0.1;
-            sunLight.shadow.camera.near = -100;
-            sunLight.shadow.camera.far = 100;
+            sunLight.shadow.camera.left = -80;
+            sunLight.shadow.camera.right = 80;
+            sunLight.shadow.camera.top = 80;
+            sunLight.shadow.camera.bottom = -80;
+            sunLight.shadow.camera.near = -50;
+            sunLight.shadow.camera.far = 50;
             sunLight.shadow.mapSize.width = 2048;
             sunLight.shadow.mapSize.height = 2048;
+            sunLight.shadow.radius = 1;
+            sunLight.shadow.bias = - 0.0020;
+            sunLight.shadow.blurSamples = 20;
 
             scene.add(sunLight); // Добавляем свет в сцену
+
+            // Добавляем вспомогательный объект для визуализации области видимости камеры света
+            //const cameraHelper = new THREE.CameraHelper(sunLight.shadow.camera);
+            //scene.add(cameraHelper);
+            scene.add( new THREE.CameraHelper( sunLight.shadow.camera ) );
 
             // Функция для обновления теневой карты
             function updateShadowMap() {
