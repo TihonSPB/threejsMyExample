@@ -436,7 +436,6 @@
                 "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/",
 
                 "three/examples/jsm/utils/BufferGeometryUtils": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/utils/BufferGeometryUtils.js",
-                "three-mesh-bvh": "https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.5.23/build/index.module.js",
                 "web-ifc": "https://cdn.jsdelivr.net/npm/web-ifc@0.0.36/web-ifc-api.js",
                 "web-ifc-three": "https://cdn.jsdelivr.net/npm/web-ifc-three@0.0.126/IFCLoader.js"
             }
@@ -595,17 +594,20 @@
             sunLight.position.copy(sun); // Устанавливаем позицию света в позицию солнца
 
             sunLight.castShadow = true; // Включаем отбрасывание теней
-            sunLight.shadow.camera.left = -80;
-            sunLight.shadow.camera.right = 80;
-            sunLight.shadow.camera.top = 80;
-            sunLight.shadow.camera.bottom = -80;
-            sunLight.shadow.camera.near = -50;
-            sunLight.shadow.camera.far = 50;
-            sunLight.shadow.mapSize.width = 2048;
-            sunLight.shadow.mapSize.height = 2048;
-            sunLight.shadow.radius = 1;
-            sunLight.shadow.bias = - 0.0020;
-            sunLight.shadow.blurSamples = 20;
+            // Настройки камеры теней для направленного света
+            sunLight.shadow.camera.left = -80; // Левая граница видимости тени
+            sunLight.shadow.camera.right = 80; // Правая граница видимости тени
+            sunLight.shadow.camera.top = 80; // Верхняя граница видимости тени
+            sunLight.shadow.camera.bottom = -80; // Нижняя граница видимости тени
+            sunLight.shadow.camera.near = -50; // Ближняя граница видимости тени
+            sunLight.shadow.camera.far = 50; // Дальняя граница видимости тени
+            // Настройки разрешения карты теней
+            sunLight.shadow.mapSize.width = 4096; // Ширина карты теней в пикселях
+            sunLight.shadow.mapSize.height = 4096; // Высота карты теней в пикселях
+            // Настройки сглаживания теней
+            sunLight.shadow.radius = 1; // Радиус размытия теней
+            sunLight.shadow.bias = - 0.0015; // Смещение тени для уменьшения артефактов
+            sunLight.shadow.blurSamples = 20; // Количество сэмплов для размытия теней
 
             scene.add(sunLight); // Добавляем свет в сцену
 
